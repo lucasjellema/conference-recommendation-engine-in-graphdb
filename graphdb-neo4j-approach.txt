@@ -1,0 +1,43 @@
+Run any VM with Docker Host
+
+Create directories
+
+mkdir ~/neo4j
+mkdir ~/neo4j/data
+mkdir ~/neo4j/logs
+
+Then run:
+
+docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/ neo4j/logs:/logs neo4j:3.0
+
+Now access Neo4J through browser at port 7474
+for example: http://192.168.188.120:7474
+
+create data using Cypher in neo4j_ddl_and_dml.txt 
+
+MATCH (n) RETURN n
+
+// now the hunt is on
+
+match (lucas:Person {name:'Lucas Jellema'}) - [:ATTENDS] -> (s1) RETURN s1
+
+// find people who attended the same sessions as ME
+match (lucas:Person {name:'Lucas Jellema'}) - [:ATTENDS] -> (s1) <- [:ATTENDS] - (p2) RETURN p2
+
+// find presenters valued by the people who attended the same sessions as I did:
+match (lucas:Person {name:'Lucas Jellema'}) - [:ATTENDS] -> (s1) <- [:ATTENDS] - (p2) - [:VALUES] -> (p3) RETURN p3
+
+// find sessions presented by presenters valued by the people who attended the same sessions as I did:
+match (lucas:Person {name:'Lucas Jellema'}) - [:ATTENDS] -> (session1) 
+  <- [:ATTENDS] - (recommender) - [:VALUES] -> (speaker) - [:PRESENTS] -> (session) RETURN session, speaker.name, recommender.name
+
+
+
+To delete:
+
+MATCH (n:Dog)-[r]-() DELETE n, r
+
+MATCH (n:Dog)-[r]-() DELETE n, r
+
+// delete all:
+MATCH (n)-[r]-() DELETE n, r

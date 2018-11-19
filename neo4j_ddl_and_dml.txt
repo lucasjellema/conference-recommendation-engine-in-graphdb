@@ -1,0 +1,19 @@
+CREATE (lucas:Person{name:'Lucas Jellema'}) – [:PRESENTS] ->(session:Session {title:'50 Shades of Data: How, When, Why—Big, Relational, NoSQL, Elastic, Graph, Event', code:'DEV4976'})
+CREATE (daniel:Person{name:'Daniel Bryant'}) – [:PRESENTS] ->(session:Session {title:'Continuous Delivery with Containers and Java: Lessons Learned and Mistakes Made', code:'DEV5349'})
+CREATE (luis:Person{name:'Luis Weir'}) – [:PRESENTS] ->(session:Session {title:'The Seven Deadly Sins of API Design', code:'DEV4921'})
+MERGE (daniel:Person{name:'Daniel Bryant'}) CREATE (daniel) - [:PRESENTS] -> (session:Session{title:'AdoptOpenJDK: Lessons Learned from the New Build Farm for Java Itself', code:'TUT5283'})
+CREATE (adam:Person{name:'Adam Farley'}) 
+MATCH (adam:Person {name:'Adam Farley'}), ((session:Session {code:'TUT5283'})) MERGE (adam)-[:PRESENTS]-> (session)
+CREATE (session:Session{title:'Oracle Cloud Soaring: Live Demo of a Poly-Cloud Microservices Implementation ', code:'DEV4979'}) 
+MATCH (luis:Person {name:'Luis Weir'}), ((session:Session {code:'DEV4979'})) MERGE (luis)-[:PRESENTS]-> (session)
+MATCH (lucas:Person {name:'Lucas Jellema'}), ((session:Session {code:'DEV4979'})) MERGE (lucas)-[:PRESENTS]-> (session)
+
+CREATE (arun:Person{name:'Arun Gupta'}) – [:PRESENTS] ->(session:Session {title:'A Day in a Java Developer’s Life, with a Taste of Kubernetes', code:'DEV4854'})
+MATCH (luis:Person {name:'Luis Weir'}), ((session:Session {code:'DEV4854'})) MERGE (luis)-[:ATTENDS]-> (session)
+MATCH (lucas:Person {name:'Lucas Jellema'}), ((session:Session {code:'DEV4854'})) MERGE (lucas)-[:ATTENDS]-> (session)
+
+// add a new person and attendee in one go
+MERGE (session:Session {code:'DEV4979'}) CREATE (session) <- [:ATTENDS] - (john:Person{name:'John Millers'})
+
+//Luis likes Daniel Bryant as a speaker
+MATCH (luis:Person {name:'Luis Weir'}), ((daniel:Person {name:'Daniel Bryant'})) MERGE (luis)-[:VALUES]-> (daniel)
